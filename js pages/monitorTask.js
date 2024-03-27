@@ -196,7 +196,7 @@ async function displayTasks() {
             ${task.TaskName}
         </div>
       </td>
-      <td class="text-center align-middle fw-bold">${task.Responsible}</td>
+      <td class="text-center align-middle fw-bold">${task.Department}</td>
       <td class="text-center align-middle fw-bold" style="font-size: 10px">${task.From}</td>
       <td class="text-center align-middle fw-bold" style="font-size: 10px">${task.To}</td>
       <td class="text-center align-middle fw-bold">${task.report}</td>
