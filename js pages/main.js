@@ -57,7 +57,6 @@ const userr = localStorage.getItem("myCode");
 console.log(userr);
 welcome.innerHTML = `Welcome ${userr}!`;
 
-
 // loading card
 
 // const spinner3 = document.getElementById('spinner3');
@@ -138,9 +137,25 @@ function hide() {
 //   }
 // }
 
-async function getData(id) {
+async function getDataById(id) {
   console.log(id);
   const baseUrl = `https://srm-vbc7.onrender.com/api/basics/${id}`;
+  const token =
+    "f2004377863e9d767b12ed40b2a996ff71343b463323b990160adf52f660493e20e77b5f368d4f510a3f9a0ccb3bb2cbed5b8c8a6800c63d768eed032bf0eeeb030cfab84d2167ca498673aeb6528147a103989c27e944e87768be0b2b6c65f5f8ad994a831150e8bce9bbf650261d17cf5f5db8e03182ea2faec183d1ec11de";
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  try {
+    const response = await fetch(baseUrl, { headers });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function getData() {
+  const baseUrl = `https://srm-vbc7.onrender.com/api/basics/`;
   const token =
     "f2004377863e9d767b12ed40b2a996ff71343b463323b990160adf52f660493e20e77b5f368d4f510a3f9a0ccb3bb2cbed5b8c8a6800c63d768eed032bf0eeeb030cfab84d2167ca498673aeb6528147a103989c27e944e87768be0b2b6c65f5f8ad994a831150e8bce9bbf650261d17cf5f5db8e03182ea2faec183d1ec11de";
   const headers = {
@@ -238,7 +253,7 @@ async function display(value) {
   change();
   // console.trace();
 
-  var users = await getData(value);
+  const users = await getDataById(value);
 
   if (users == "") {
     console.log("ID not found or there was an error.");
@@ -284,89 +299,87 @@ async function display(value) {
   }
 
   // users.forEach((element) => {}
-    // // Initialize the variable `user`
-    if (users.data) {
-      var user = {
-        Name: users.data.attributes.name,
-        ID: users.data.attributes.studentnum,
-        Email: users.data.attributes.email,
-        Phone: users.data.attributes.phone,
-        img: users.data.attributes.image,
-        CareerType: users.data.attributes.careertype,
-        IdNumber: users.data.attributes.national_id,
-        DOB: users.data.attributes.birth_date,
-        StudyType: users.data.attributes.study_type,
-        Grade: users.data.attributes.grade,
-        Scholarship: users.data.attributes.scholarship,
-        Receptionist: users.data.attributes.receptionist,
-        Reserver: users.data.attributes.reserver,
-        CCAgent: users.data.attributes.called_by,
-        ReservationDate: users.data.attributes.reservation_date,
-        Schadule: users.data.attributes.schadule,
-        Payments: users.data.attributes.payments,
-        Papers: users.data.attributes.papers,
-        Requestss: users.data.attributes.requests,
-        Complaintss: users.data.attributes.complaints,
-      };
-    } else {
-      // Handle the case where users.data is null or undefined
-      console.error("Error: users.data is null or undefined");
-    }
-    
+  // // Initialize the variable `user`
+  if (users.data) {
+    var user = {
+      Name: users.data.attributes.name,
+      ID: users.data.attributes.studentnum,
+      Email: users.data.attributes.email,
+      Phone: users.data.attributes.phone,
+      img: users.data.attributes.image,
+      CareerType: users.data.attributes.careertype,
+      IdNumber: users.data.attributes.national_id,
+      DOB: users.data.attributes.birth_date,
+      StudyType: users.data.attributes.study_type,
+      Grade: users.data.attributes.grade,
+      Scholarship: users.data.attributes.scholarship,
+      Receptionist: users.data.attributes.receptionist,
+      Reserver: users.data.attributes.reserver,
+      CCAgent: users.data.attributes.called_by,
+      ReservationDate: users.data.attributes.reservation_date,
+      Schadule: users.data.attributes.schadule,
+      Payments: users.data.attributes.payments,
+      Papers: users.data.attributes.papers,
+      Requestss: users.data.attributes.requests,
+      Complaintss: users.data.attributes.complaints,
+    };
+  } else {
+    // Handle the case where users.data is null or undefined
+    console.error("Error: users.data is null or undefined");
+  }
 
-   
+  // Save the data to session storage
+  sessionStorage.setItem("myAllData", JSON.stringify(user));
 
-    // Save the data to session storage
-    sessionStorage.setItem("myAllData", JSON.stringify(user));
+  // Split email until the first comma
+  let emailParts = users.data.attributes.email.split(",");
+  let firstEmail = emailParts[0].trim(); // Trim removes any leading or trailing whitespace
 
-    // Split email until the first comma
-let emailParts = users.data.attributes.email.split(',');
-let firstEmail = emailParts[0].trim(); // Trim removes any leading or trailing whitespace
+  // Use the data to render the page
+  fName.innerHTML = users.data.attributes.name;
+  ID.innerHTML = users.data.attributes.studentnum;
+  Email.innerHTML = firstEmail; // Uncomment if you want to display the full email
+  emailcrd.innerHTML = users.data.attributes.email; // Uncomment if you want to display the full email
+  Phone.innerHTML = users.data.attributes.phone;
+  headName.innerHTML = users.data.attributes.name.slice(0, 50);
+  pic.src = users.data.attributes.image;
+  Career.innerHTML = users.data.attributes.careertype;
+  StudyType.innerHTML = users.data.attributes.study_type;
+  IdNumber.innerHTML = users.data.attributes.national_id;
+  DOB.innerHTML = users.data.attributes.birth_date.slice(0, 10);
+  Grade.innerHTML = users.data.attributes.grade;
+  Scholarship.innerHTML = users.data.attributes.scholarship;
+  Receptionist.innerHTML = users.data.attributes.recp;
+  Reserver.innerHTML = users.data.attributes.reserver;
+  CCAgent.innerHTML = users.data.attributes.called_by; // Assuming CCAgent is equivalent to called_by
+  ReservationDate.innerHTML = users.data.attributes.reservation_date.slice(
+    0,
+    10
+  );
+  Schadule.innerHTML = users.data.attributes.schadule;
+  Payments.innerHTML = users.data.attributes.payments;
+  Papers.innerHTML = users.data.attributes.papers;
+  Requestss.innerHTML = users.data.attributes.requests;
+  Complaintss.innerHTML = users.data.attributes.complaints;
 
-    // Use the data to render the page
-    fName.innerHTML = users.data.attributes.name;
-    ID.innerHTML = users.data.attributes.studentnum;
-    Email.innerHTML = firstEmail; // Uncomment if you want to display the full email
-    emailcrd.innerHTML = users.data.attributes.email; // Uncomment if you want to display the full email
-    Phone.innerHTML = users.data.attributes.phone;
-    headName.innerHTML = users.data.attributes.name.slice(0, 50);
-    pic.src = users.data.attributes.image;
-    Career.innerHTML = users.data.attributes.careertype;
-    StudyType.innerHTML = users.data.attributes.study_type;
-    IdNumber.innerHTML = users.data.attributes.national_id;
-    DOB.innerHTML = users.data.attributes.birth_date.slice(0, 10);
-    Grade.innerHTML = users.data.attributes.grade;
-    Scholarship.innerHTML = users.data.attributes.scholarship;
-    Receptionist.innerHTML = users.data.attributes.recp;
-    Reserver.innerHTML = users.data.attributes.reserver;
-    CCAgent.innerHTML = users.data.attributes.called_by; // Assuming CCAgent is equivalent to called_by
-    ReservationDate.innerHTML = users.data.attributes.reservation_date.slice(0, 10);
-    Schadule.innerHTML = users.data.attributes.schadule;
-    Payments.innerHTML = users.data.attributes.payments;
-    Papers.innerHTML = users.data.attributes.papers;
-    Requestss.innerHTML = users.data.attributes.requests;
-    Complaintss.innerHTML = users.data.attributes.complaints;
-    
-    // Assigning values to variables and storing them in sessionStorage if needed
-    let idToPass = users.data.attributes.studentnum;
-    sessionStorage.setItem("idToPass", idToPass);
-    
-    let scholarshipToPass = users.data.attributes.scholarship;
-    sessionStorage.setItem("ScholarshipToPass", scholarshipToPass);
-    
-    let receptionistToPass = users.data.attributes.recp;
-    sessionStorage.setItem("ReceptionistToPass", receptionistToPass);
-    
-    let schaduleToPass = users.data.attributes.schadule;
-    sessionStorage.setItem("schaduleToPass", schaduleToPass);
-    
-    let emailToPass = users.data.attributes.email;
-    sessionStorage.setItem("emailToPass", emailToPass);
-    
-    let groupToPass = users.data.attributes.study_type;
-    sessionStorage.setItem("groupToPass", groupToPass);
-    
-  ;
+  // Assigning values to variables and storing them in sessionStorage if needed
+  let idToPass = users.data.attributes.studentnum;
+  sessionStorage.setItem("idToPass", idToPass);
+
+  let scholarshipToPass = users.data.attributes.scholarship;
+  sessionStorage.setItem("ScholarshipToPass", scholarshipToPass);
+
+  let receptionistToPass = users.data.attributes.recp;
+  sessionStorage.setItem("ReceptionistToPass", receptionistToPass);
+
+  let schaduleToPass = users.data.attributes.schadule;
+  sessionStorage.setItem("schaduleToPass", schaduleToPass);
+
+  let emailToPass = users.data.attributes.email;
+  sessionStorage.setItem("emailToPass", emailToPass);
+
+  let groupToPass = users.data.attributes.study_type;
+  sessionStorage.setItem("groupToPass", groupToPass);
 
   // progress-bar
 
@@ -409,6 +422,238 @@ let firstEmail = emailParts[0].trim(); // Trim removes any leading or trailing w
   // Push the user ID to the anotherGlobalObject object
   hide();
 }
+
+//display by phone
+
+async function displayByPhone(value) {
+  change();
+
+  try {
+    const users = await getData();
+    const user = users.data.find((user) =>
+      user.attributes.phone.includes(value)
+    );
+    console.log(user);
+    // Save the data to session storage
+    sessionStorage.setItem("myAllData", JSON.stringify(user));
+
+    if (user) {
+
+      // Split email until the first comma
+      let emailParts = user.attributes.email.split(",");
+      let firstEmail = emailParts[0].trim(); // Trim removes any leading or trailing whitespace
+
+      // Use the data to render the page
+      fName.innerHTML = user.attributes.name;
+      ID.innerHTML = user.attributes.studentnum;
+      Email.innerHTML = firstEmail; // Uncomment if you want to display the full email
+      emailcrd.innerHTML = user.attributes.email; // Uncomment if you want to display the full email
+      Phone.innerHTML = user.attributes.phone;
+      headName.innerHTML = user.attributes.name.slice(0, 50);
+      pic.src = user.attributes.image;
+      Career.innerHTML = user.attributes.careertype;
+      StudyType.innerHTML = user.attributes.study_type;
+      IdNumber.innerHTML = user.attributes.national_id;
+      DOB.innerHTML = user.attributes.birth_date.slice(0, 10);
+      Grade.innerHTML = user.attributes.grade;
+      Scholarship.innerHTML = user.attributes.scholarship;
+      Receptionist.innerHTML = user.attributes.recp;
+      Reserver.innerHTML = user.attributes.reserver;
+      CCAgent.innerHTML = user.attributes.called_by; // Assuming CCAgent is equivalent to called_by
+      ReservationDate.innerHTML = user.attributes.reservation_date.slice(0, 10);
+      Schadule.innerHTML = user.attributes.schadule;
+      Payments.innerHTML = user.attributes.payments;
+      Papers.innerHTML = user.attributes.papers;
+      Requestss.innerHTML = user.attributes.requests;
+      Complaintss.innerHTML = user.attributes.complaints;
+
+      // Assigning values to variables and storing them in sessionStorage if needed
+      let idToPass = user.attributes.studentnum;
+      sessionStorage.setItem("idToPass", idToPass);
+
+      let scholarshipToPass = user.attributes.scholarship;
+      sessionStorage.setItem("ScholarshipToPass", scholarshipToPass);
+
+      let receptionistToPass = user.attributes.recp;
+      sessionStorage.setItem("ReceptionistToPass", receptionistToPass);
+
+      let schaduleToPass = user.attributes.schadule;
+      sessionStorage.setItem("schaduleToPass", schaduleToPass);
+
+      let emailToPass = user.attributes.email;
+      sessionStorage.setItem("emailToPass", emailToPass);
+
+      let groupToPass = user.attributes.study_type;
+      sessionStorage.setItem("groupToPass", groupToPass);
+
+      // progress-bar
+
+      console.log("schaduleToPass : " + schaduleToPass);
+
+      if (schaduleToPass) {
+        const numerator = parseInt(schaduleToPass.split("/")[0]);
+        const denominator = parseInt(schaduleToPass.split("/")[1]);
+        const decimal = numerator / denominator;
+        console.log("decimal : " + decimal);
+        const width = decimal * 100;
+        const widthh = Math.round(width);
+        // console.log(Math.round(width));
+        level.innerHTML = `${widthh}%`;
+        progressBar.style.width = `${widthh}%`;
+        sessionStorage.setItem("progressBar", progressBar.style.width);
+        sessionStorage.setItem("level", level.innerHTML);
+      }
+
+      console.log("email : " + emailToPass);
+      console.log("StudyType : " + groupToPass);
+
+      await selectEmail();
+      await selectModule();
+
+      // Get the current date
+      const currentDate = new Date();
+
+      // Add 30 days to the current date
+      const futureDate = new Date(currentDate);
+      futureDate.setDate(currentDate.getDate() + 30);
+
+      // Convert the future date to dd/mm/yyyy format
+      const formattedFutureDate = futureDate.toLocaleDateString("en-GB");
+
+      // Display the result
+      ShareEnd.innerHTML = "share End : " + formattedFutureDate;
+      EndShareDate.value = formattedFutureDate;
+
+      // Push the user ID to the anotherGlobalObject object
+      hide();
+    } else {
+      console.log("Phone number not found");
+      // Handle the case when the user is not found
+      // For example, display an error message
+    }
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+    // For example, display an error message to the user
+  }
+}
+
+//diplay email
+
+async function displayByEmail(value) {
+  change();
+
+  try {
+    const users = await getData();
+    const user = users.data.find((user) =>
+      user.attributes.email.includes(value)
+      );
+      console.log(user);
+      // Save the data to session storage
+      sessionStorage.setItem("myAllData", JSON.stringify(user));
+    
+    if (user) {
+
+      // Split email until the first comma
+      let emailParts = user.attributes.email.split(",");
+      let firstEmail = emailParts[0].trim(); // Trim removes any leading or trailing whitespace
+
+      // Use the data to render the page
+      fName.innerHTML = user.attributes.name;
+      ID.innerHTML = user.attributes.studentnum;
+      Email.innerHTML = firstEmail; // Uncomment if you want to display the full email
+      emailcrd.innerHTML = user.attributes.email; // Uncomment if you want to display the full email
+      Phone.innerHTML = user.attributes.phone;
+      headName.innerHTML = user.attributes.name.slice(0, 50);
+      pic.src = user.attributes.image;
+      Career.innerHTML = user.attributes.careertype;
+      StudyType.innerHTML = user.attributes.study_type;
+      IdNumber.innerHTML = user.attributes.national_id;
+      DOB.innerHTML = user.attributes.birth_date.slice(0, 10);
+      Grade.innerHTML = user.attributes.grade;
+      Scholarship.innerHTML = user.attributes.scholarship;
+      Receptionist.innerHTML = user.attributes.recp;
+      Reserver.innerHTML = user.attributes.reserver;
+      CCAgent.innerHTML = user.attributes.called_by; // Assuming CCAgent is equivalent to called_by
+      ReservationDate.innerHTML = user.attributes.reservation_date.slice(0, 10);
+      Schadule.innerHTML = user.attributes.schadule;
+      Payments.innerHTML = user.attributes.payments;
+      Papers.innerHTML = user.attributes.papers;
+      Requestss.innerHTML = user.attributes.requests;
+      Complaintss.innerHTML = user.attributes.complaints;
+
+      // Assigning values to variables and storing them in sessionStorage if needed
+      let idToPass = user.attributes.studentnum;
+      sessionStorage.setItem("idToPass", idToPass);
+
+      let scholarshipToPass = user.attributes.scholarship;
+      sessionStorage.setItem("ScholarshipToPass", scholarshipToPass);
+
+      let receptionistToPass = user.attributes.recp;
+      sessionStorage.setItem("ReceptionistToPass", receptionistToPass);
+
+      let schaduleToPass = user.attributes.schadule;
+      sessionStorage.setItem("schaduleToPass", schaduleToPass);
+
+      let emailToPass = user.attributes.email;
+      sessionStorage.setItem("emailToPass", emailToPass);
+
+      let groupToPass = user.attributes.study_type;
+      sessionStorage.setItem("groupToPass", groupToPass);
+
+      // progress-bar
+
+      console.log("schaduleToPass : " + schaduleToPass);
+
+      if (schaduleToPass) {
+        const numerator = parseInt(schaduleToPass.split("/")[0]);
+        const denominator = parseInt(schaduleToPass.split("/")[1]);
+        const decimal = numerator / denominator;
+        console.log("decimal : " + decimal);
+        const width = decimal * 100;
+        const widthh = Math.round(width);
+        // console.log(Math.round(width));
+        level.innerHTML = `${widthh}%`;
+        progressBar.style.width = `${widthh}%`;
+        sessionStorage.setItem("progressBar", progressBar.style.width);
+        sessionStorage.setItem("level", level.innerHTML);
+      }
+
+      console.log("email : " + emailToPass);
+      console.log("StudyType : " + groupToPass);
+
+      await selectEmail();
+      await selectModule();
+
+      // Get the current date
+      const currentDate = new Date();
+
+      // Add 30 days to the current date
+      const futureDate = new Date(currentDate);
+      futureDate.setDate(currentDate.getDate() + 30);
+
+      // Convert the future date to dd/mm/yyyy format
+      const formattedFutureDate = futureDate.toLocaleDateString("en-GB");
+
+      // Display the result
+      ShareEnd.innerHTML = "share End : " + formattedFutureDate;
+      EndShareDate.value = formattedFutureDate;
+
+      // Push the user ID to the anotherGlobalObject object
+      hide();
+    } else {
+      console.log("Phone number not found");
+      // Handle the case when the user is not found
+      // For example, display an error message
+    }
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+    // For example, display an error message to the user
+  }
+}
+
+// Rest of your code here
 
 // Retrieve values from localStorage on page load
 window.addEventListener("load", function () {
@@ -595,7 +840,7 @@ searchButton.addEventListener("click", (e) => {
   // sessionStorage.clear();
   const value = searchInput[0].value;
   console.log("value :" + value);
-  if (value.trim() === "" || value == null) {
+  if (value === "" || value == null) {
     // Create a Bootstrap alert message
     const alertMessage = document.createElement("div");
     alertMessage.classList.add("alert", "alert-danger");
@@ -636,17 +881,47 @@ searchButton.addEventListener("click", (e) => {
 
     // Stop all functions from another JavaScript file
     return;
+  }
+
+  if (value.includes("@")) {
+    sessionStorage.clear();
+    displayByEmail(value);
+    moreEmail();
+    updateButtonState();
+  } else if (value.length > 5) {
+    sessionStorage.clear();
+    displayByPhone(value);
+    moreEmail();
+    updateButtonState();
   } else {
     sessionStorage.clear();
     display(value);
     moreEmail();
-
     updateButtonState();
-
-    // displayDeadCard(value);
-    // displayPlanCard(value)
   }
 });
+
+// searchButton.addEventListener("click", async (event) => {
+//   event.preventDefault();
+//   const searchValue = searchInput.value;
+//   if (!searchValue) {
+//     alert("Please enter a search value");
+//     return;
+//   }
+//   // Check if the search value contains "@" to determine if it's an email
+//   if (searchValue.length > 5) {
+//     sessionStorage.clear();
+//     // Assuming phone number should have more than 5 digits
+//     await displayByPhone(searchValue);
+//     moreEmail();
+//     updateButtonState();
+//   } else {
+//     sessionStorage.clear();
+//     await display(searchValue);
+//     moreEmail();
+//     updateButtonState();
+//   }
+// });
 
 window.onload = function () {
   const sidebar = document.querySelector(".sidebar");
@@ -1055,77 +1330,75 @@ appBtn.addEventListener("click", () => {
   }
 });
 
-
 window.addEventListener("load", function () {
-    if (
-        localStorage.getItem("myCode") === "" ||
-        localStorage.getItem("myCode") === null
+  if (
+    localStorage.getItem("myCode") === "" ||
+    localStorage.getItem("myCode") === null
   ) {
     // Redirect to index.html
     window.location.href = "index.html";
   }
 });
 
+// const id = sessionStorage.getItem('idToPass');
 
-    // const id = sessionStorage.getItem('idToPass');
-    
-    // function checkIdAndDisableButton() {
-    //   if (id) {
-    //     appBtn.disabled = false;
-    //   } else {
-    //     appBtn.disabled = true;
-    //   }
-    // }
-    
-    // window.addEventListener('DOMContentLoaded', checkIdAndDisableButton);
-    
-    // window.addEventListener('storage', function (e) {
-    //   if (e.key === id) {
-    //     id = e.newValue;
-    //     checkIdAndDisableButton();
-    //   }
-    // });
-    
-    // window.addEventListener("popstate", function(event) {
-    //   sessionStorage.clear();
-    //   localStorage.clear();
-    // });
-    
-    // let params = {};
-    // let regex = /([^&=]+)=([^&]*)/g, m;
-    // while (m = regex.exec(location.href)){
-    //   params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-    // }
-    
-    // if (Object.keys(params).length > 0) {
-    //   localStorage.setItem('authInfo', JSON.stringify(params));
-    // }
-    
-    // // hide the access token
-    // if (window.history && window.history.pushState) {
-    //   window.history.pushState({}, document.title, "/SRM.html");
-    // } else {
-    //   window.location.replace("/SRM.html");
-    // }
-    
-    // let info = JSON.parse(localStorage.getItem('authInfo'));
-    // console.log(JSON.parse(localStorage.getItem('authInfo')));
-    // console.log(info['access_token']);
-    // console.log(info['expires_in']);
-    
-    // console.log(user);
-    
-    // const trace = document.createElement("h1");
-    
-    // trace.classList.add("success" , "alert");
-    // trace.style.width = "25%";
-    
-    // trace.style.zIndex = "1";
-    
-    // const storage = sessionStorage.getItem("searchBtn");
-    
-    // console.log(storage)
-    
-    // trace.innerHTML = storage;
-    
-    // document.body.appendChild(trace);
+// function checkIdAndDisableButton() {
+//   if (id) {
+//     appBtn.disabled = false;
+//   } else {
+//     appBtn.disabled = true;
+//   }
+// }
+
+// window.addEventListener('DOMContentLoaded', checkIdAndDisableButton);
+
+// window.addEventListener('storage', function (e) {
+//   if (e.key === id) {
+//     id = e.newValue;
+//     checkIdAndDisableButton();
+//   }
+// });
+
+// window.addEventListener("popstate", function(event) {
+//   sessionStorage.clear();
+//   localStorage.clear();
+// });
+
+// let params = {};
+// let regex = /([^&=]+)=([^&]*)/g, m;
+// while (m = regex.exec(location.href)){
+//   params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+// }
+
+// if (Object.keys(params).length > 0) {
+//   localStorage.setItem('authInfo', JSON.stringify(params));
+// }
+
+// // hide the access token
+// if (window.history && window.history.pushState) {
+//   window.history.pushState({}, document.title, "/SRM.html");
+// } else {
+//   window.location.replace("/SRM.html");
+// }
+
+// let info = JSON.parse(localStorage.getItem('authInfo'));
+// console.log(JSON.parse(localStorage.getItem('authInfo')));
+// console.log(info['access_token']);
+// console.log(info['expires_in']);
+
+// console.log(user);
+
+// const trace = document.createElement("h1");
+
+// trace.classList.add("success" , "alert");
+// trace.style.width = "25%";
+
+// trace.style.zIndex = "1";
+
+// const storage = sessionStorage.getItem("searchBtn");
+
+// console.log(storage)
+
+// trace.innerHTML = storage;
+
+// document.body.appendChild(trace);

@@ -1898,7 +1898,7 @@ body {
   color: var(--color-white);
 }
 
-.sidebar li a,button {
+.sidebar li a,.taskBtn {
   display: flex;
   height: 100%;
   width: 100%;
@@ -1923,7 +1923,7 @@ body {
   z-index: -2;
 }
 
-.sidebar li button::after {
+.sidebar li .taskBtn::after {
   content: "";
   position: absolute;
   width: 100%;

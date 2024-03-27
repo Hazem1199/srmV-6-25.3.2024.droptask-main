@@ -388,7 +388,7 @@ async function displayTasks() {
       //   });
 
       tableBody.appendChild(newRow);
-    }
+    } 
   }
 
   document
