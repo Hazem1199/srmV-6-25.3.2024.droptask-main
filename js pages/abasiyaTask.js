@@ -264,7 +264,7 @@ async function displayTasks() {
   
                       <div class="form-group mt-3 form-floating">
                         <textarea name="note" class="form-control" placeholder="Nots" id="reportNote"
-                          rows="10" required></textarea>
+                          rows="10" ></textarea>
                         <label for="reportNote" class="form-label">Write Your Note</label>
                       </div>
                   
